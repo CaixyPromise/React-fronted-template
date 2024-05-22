@@ -1,8 +1,11 @@
 declare namespace API {
   type AboutMeVO = {
     userAccount?: string;
-    userCompany?: string;
+    userAvatar?: string;
+    userEmail?: string;
+    userGender?: number;
     userName?: string;
+    userPhone?: string;
   };
 
   type AddUserVO = {
@@ -274,6 +277,10 @@ declare namespace API {
     userId?: number;
   };
 
+  type uploadFileToLocalUsingPOST1Params = {
+    biz?: string;
+  };
+
   type uploadFileUsingPOST1Params = {
     biz?: string;
   };
@@ -288,6 +295,7 @@ declare namespace API {
     userAccount?: string;
     userAvatar?: string;
     userEmail?: string;
+    userGender?: number;
     userName?: string;
     userPassword?: string;
     userPhone?: string;
@@ -351,6 +359,7 @@ declare namespace API {
   type UserUpdateRequest = {
     id?: number;
     userAvatar?: string;
+    userGender?: number;
     userName?: string;
     userProfile?: string;
     userRole?: string;

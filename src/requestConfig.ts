@@ -1,4 +1,4 @@
-﻿import { BACKEND_HOST_LOCAL, BACKEND_HOST_PROD } from '@/constants';
+﻿import {baseURL} from '@/constants';
 import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 
@@ -10,7 +10,7 @@ interface ResponseStructure {
   errorMessage?: string;
 }
 
-const isDev = process.env.NODE_ENV === 'development';
+
 
 /**
  * @name 错误处理
@@ -18,7 +18,7 @@ const isDev = process.env.NODE_ENV === 'development';
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const requestConfig: RequestConfig = {
-  baseURL: isDev ? BACKEND_HOST_LOCAL : BACKEND_HOST_PROD,
+  baseURL: baseURL,
   withCredentials: true,
 
   // 请求拦截器

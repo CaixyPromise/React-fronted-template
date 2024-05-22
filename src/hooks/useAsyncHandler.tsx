@@ -43,11 +43,11 @@ type useAsyncHandlerCallbackProps<T> = (
 const useAsyncHandler = <T extends {}>(): [
     (action: () => Promise<T>, onError?: (error: any) => void) => Promise<T | null>,
     boolean,
-    Error | null
+    T | null,
 ] =>
 {
     const [ isPending, setIsPending ] = useState<boolean>(false);
-    const [ error, setError ] = useState<Error | null>(null);
+    const [ data, setData ] = useState<T | null>(null);
     const cleanupRef = useRef<(() => void) | null>(null);
     const run: useAsyncHandlerCallbackProps<T> = useCallback(
         async (
@@ -68,11 +68,11 @@ const useAsyncHandler = <T extends {}>(): [
                 setIsPending(true);
                 const response: Awaited<T> = await action();
                 setIsPending(false);
+                setData(response);
                 return response;
             }
             catch (err: any)
             {
-                setError(err);
                 setIsPending(false);
                 if (onError) {
                     onError?.call(null, err);
@@ -95,7 +95,7 @@ const useAsyncHandler = <T extends {}>(): [
             }
         };
     }, []);
-    return [ run, isPending, error ];
+    return [ run, isPending, data ];
 };
 
 export default useAsyncHandler;

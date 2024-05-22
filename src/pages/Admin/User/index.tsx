@@ -1,12 +1,14 @@
 import CreateModal from '@/pages/Admin/User/components/CreateModal';
 import UpdateModal from '@/pages/Admin/User/components/UpdateModal';
 import {PlusOutlined} from '@ant-design/icons';
-import type {ActionType, ProColumns} from '@ant-design/pro-components';
+import type {ActionType} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
 import '@umijs/max';
-import {Button, message, Space, Typography} from 'antd';
+import {Button, message} from 'antd';
 import React, {useRef, useState} from 'react';
 import {deleteUserUsingPost1, listUserByPageUsingPost1} from "@/services/backend/userController";
+import {getUserTableColumn} from "@/pages/Admin/User/columns";
+import useAsyncHandler from "@/hooks/useAsyncHandler";
 
 /**
  * 用户管理页面
@@ -21,7 +23,12 @@ const UserAdminPage: React.FC = () =>
     const [ updateModalVisible, setUpdateModalVisible ] = useState<boolean>(false);
     const actionRef = useRef<ActionType>();
     // 当前用户点击的数据
-    const [ currentRow, setCurrentRow ] = useState<API.User>();
+    const [ currentRow, setCurrentRow ] = useState<API.User>({});
+    const [ queryHandler, isLoading] = useAsyncHandler<{
+        code?: number;
+        data?: API.PageUser_;
+        message?: string;
+    }>()
 
     /**
      * 删除节点
@@ -53,87 +60,7 @@ const UserAdminPage: React.FC = () =>
     /**
      * 表格列配置
      */
-    const columns: ProColumns<API.User>[] = [
-        {
-            title: 'id',
-            dataIndex: 'id',
-            valueType: 'text',
-            hideInForm: true,
-        },
-        {
-            title: '账号',
-            dataIndex: 'userAccount',
-            valueType: 'text',
-        },
-        {
-            title: '用户名',
-            dataIndex: 'userName',
-            valueType: 'text',
-        },
-        {
-            title: '头像',
-            dataIndex: 'userAvatar',
-            valueType: 'image',
-            fieldProps: {
-                width: 64,
-            },
-            hideInSearch: true,
-        },
-        {
-            title: '简介',
-            dataIndex: 'userProfile',
-            valueType: 'textarea',
-        },
-        {
-            title: '权限',
-            dataIndex: 'userRole',
-            valueEnum: {
-                user: {
-                    text: '用户',
-                },
-                admin: {
-                    text: '管理员',
-                },
-            },
-        },
-        {
-            title: '创建时间',
-            sorter: true,
-            dataIndex: 'createTime',
-            valueType: 'dateTime',
-            hideInSearch: true,
-            hideInForm: true,
-        },
-        {
-            title: '更新时间',
-            sorter: true,
-            dataIndex: 'updateTime',
-            valueType: 'dateTime',
-            hideInSearch: true,
-            hideInForm: true,
-        },
-        {
-            title: '操作',
-            dataIndex: 'option',
-            valueType: 'option',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Typography.Link
-                        onClick={() =>
-                        {
-                            setCurrentRow(record);
-                            setUpdateModalVisible(true);
-                        }}
-                    >
-                        修改
-                    </Typography.Link>
-                    <Typography.Link type="danger" onClick={() => handleDelete(record)}>
-                        删除
-                    </Typography.Link>
-                </Space>
-            ),
-        },
-    ];
+
     return (
         <PageContainer>
             <ProTable<API.User>
@@ -160,24 +87,27 @@ const UserAdminPage: React.FC = () =>
                     const sortField = Object.keys(sort)?.[0];
                     const sortOrder = sort?.[sortField] ?? undefined;
 
-                    const { data, code } = await listUserByPageUsingPost1({
-                        ...params,
-                        sortField,
-                        sortOrder,
-                        ...filter,
-                    } as API.UserQueryRequest);
-
+                    const response = await queryHandler(async () =>
+                    {
+                        return await listUserByPageUsingPost1({
+                            ...params,
+                            sortField,
+                            sortOrder,
+                            ...filter,
+                        } as API.UserQueryRequest);
+                    }, error => {message.error(error.message)})
+                    const { data, code } = response;
                     return {
                         success: code === 0,
                         data: data?.records || [],
                         total: Number(data?.total) || 0,
-                    };
+                    };;
                 }}
-                columns={columns}
+                columns={getUserTableColumn({ setCurrentRow , setUpdateModalVisible, handleDelete })}
             />
             <CreateModal
                 visible={createModalVisible}
-                columns={columns}
+                columns={getUserTableColumn({ setCurrentRow , setUpdateModalVisible, handleDelete })}
                 onSubmit={() =>
                 {
                     setCreateModalVisible(false);
@@ -190,12 +120,12 @@ const UserAdminPage: React.FC = () =>
             />
             <UpdateModal
                 visible={updateModalVisible}
-                columns={columns}
+                columns={getUserTableColumn({ setCurrentRow , setUpdateModalVisible, handleDelete })}
                 oldData={currentRow}
                 onSubmit={() =>
                 {
                     setUpdateModalVisible(false);
-                    setCurrentRow(undefined);
+                    setCurrentRow({  });
                     actionRef.current?.reload();
                 }}
                 onCancel={() =>

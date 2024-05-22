@@ -1,3 +1,5 @@
+import React from "react";
+
 declare module 'slash2';
 declare module '*.css';
 declare module '*.less';
@@ -60,4 +62,13 @@ interface BaseResponse<T> {
  */
 interface InitialState {
   currentUser?: API.LoginUserVO;
+}
+
+
+interface ColumnsParams<T>
+{
+
+  setCurrentRow: React.Dispatch<React.SetStateAction<T>>;
+  setUpdateModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  handleDelete: (record: T) => void;
 }

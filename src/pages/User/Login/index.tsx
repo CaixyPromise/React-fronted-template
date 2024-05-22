@@ -24,8 +24,8 @@ const Login: React.FC = () =>
     const formRef = useRef<FormInstance>();
     const [ type, setType ] = useState<ActionType>(ActionType.AccountLogin);
     const { initialState, setInitialState } = useModel('@@initialState');
-    const [ loginHandler, isPending, error ] = useAsyncHandler<API.LoginUserVO>()
-    const [ registerHandler, isPendingRegister, errorRegister ] = useAsyncHandler<boolean>()
+    const [ loginHandler, isPending,  ] = useAsyncHandler<API.LoginUserVO>()
+    const [ registerHandler, isPendingRegister ] = useAsyncHandler<boolean>()
     const styles = useMemo(() => {
         const baseStyle = {
             transition: 'opacity 0.5s ease, max-height 0.5s ease',

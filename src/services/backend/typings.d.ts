@@ -114,6 +114,13 @@ declare namespace API {
     id?: number;
   };
 
+  type downloadFileByIdUsingGET1Params = {
+    /** bizName */
+    bizName: string;
+    /** id */
+    id: string;
+  };
+
   type getPostVOByIdUsingGET1Params = {
     /** id */
     id?: number;
@@ -277,12 +284,9 @@ declare namespace API {
     userId?: number;
   };
 
-  type uploadFileToLocalUsingPOST1Params = {
-    biz?: string;
-  };
-
   type uploadFileUsingPOST1Params = {
     biz?: string;
+    token?: string;
   };
 
   type User = {

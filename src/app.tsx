@@ -5,6 +5,7 @@ import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown } from './components/RightContent/AvatarDropdown';
 import { requestConfig } from './requestConfig';
 import {getLoginUserUsingGet1} from "@/services/backend/userController";
+import {InitialState} from "@/typings";
 
 const loginPath = '/user/login';
 
@@ -35,7 +36,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     avatarProps: {
       render: () => {
-        return <AvatarDropdown />;
+        return <AvatarDropdown menu={true} />;
       },
     },
     waterMarkProps: {

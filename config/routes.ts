@@ -11,7 +11,14 @@ export default [
       { icon: 'table', path: '/admin/user', component: './Admin/User', name: "用户管理" },
     ],
   },
-  { path: "/center", icon: "user", component: "./User/Settings", name: "个人中心" },
+  {
+    path: "/account", icon: "user", component: "./User/Settings", name: "个人中心",
+    routes: [
+      { path: '/account/settings', exact: true, component: './User/Settings' },
+      { path: '/account/settings/:operation', exact: true, component: './User/Settings' },
+      { path: "/account/settings/", redirect: '/account/settings' }
+    ]
+  },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];

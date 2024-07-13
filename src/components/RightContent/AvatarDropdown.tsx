@@ -8,7 +8,7 @@ import { flushSync } from 'react-dom';
 import { Link } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import {userLogoutUsingPost1} from "@/services/backend/userController";
-import {STATIC_URL} from "@/constants";
+import {LOGIN_PATH, STATIC_URL} from "@/constants";
 
 export type GlobalHeaderRightProps = {
     menu?: boolean;
@@ -18,16 +18,18 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     /**
      * 退出登录，并且将当前的 url 保存
      */
-    const loginOut = async () => {
+    const loginOut = async () =>
+    {
         await userLogoutUsingPost1();
         const { search, pathname } = window.location;
         const urlParams = new URL(window.location.href).searchParams;
         /** 此方法会跳转到 redirect 参数所在的位置 */
         const redirect = urlParams.get('redirect');
         // Note: There may be security issues, please note
-        if (window.location.pathname !== '/user/login' && !redirect) {
+        if (window.location.pathname !== LOGIN_PATH && !redirect)
+        {
             history.replace({
-                pathname: '/user/login',
+                pathname: LOGIN_PATH,
                 search: stringify({
                     redirect: pathname + search,
                 }),
@@ -38,9 +40,11 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     const { initialState, setInitialState } = useModel('@@initialState');
 
     const onMenuClick = useCallback(
-        (event: MenuInfo) => {
+        (event: MenuInfo) =>
+        {
             const { key } = event;
-            if (key === 'logout') {
+            if (key === 'logout')
+            {
                 flushSync(() => {
                     setInitialState((s) => ({ ...s, currentUser: undefined }));
                 });
@@ -88,7 +92,6 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
             label: '退出登录',
         },
     ];
-    console.log(`${STATIC_URL}${currentUser?.userAvatar}`)
     return (
         <HeaderDropdown
             menu={{

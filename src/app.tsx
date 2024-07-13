@@ -6,8 +6,7 @@ import { AvatarDropdown } from './components/RightContent/AvatarDropdown';
 import { requestConfig } from './requestConfig';
 import {getLoginUserUsingGet1} from "@/services/backend/userController";
 import {InitialState} from "@/typings";
-
-const loginPath = '/user/login';
+import {LOGIN_PATH} from "@/constants";
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -18,13 +17,13 @@ export async function getInitialState(): Promise<InitialState> {
   };
   // 如果不是登录页面，执行
   const { location } = history;
-  if (location.pathname !== loginPath) {
+  if (location.pathname !== LOGIN_PATH) {
     try {
       const res = await getLoginUserUsingGet1();
       initialState.currentUser = res.data;
     } catch (error: any) {
       // 如果未登录
-      window.location.href = loginPath;
+      window.location.href = LOGIN_PATH;
     }
   }
   return initialState;

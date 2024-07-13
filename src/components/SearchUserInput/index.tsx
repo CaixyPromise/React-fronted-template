@@ -3,8 +3,6 @@ import {Select, Spin} from 'antd';
 import debounce from 'lodash/debounce';
 import {DebounceSelectProps, SearchInputProps, SearchValueResult} from "@/components/SearchUserInput/typing";
 
-
-
 function DebounceSelect<
     ValueType extends { key?: string; label: React.ReactNode; value: string | number } = any,
 >({ fetchOptions, debounceTimeout = 800, ...props }: DebounceSelectProps<ValueType>)

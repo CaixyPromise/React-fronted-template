@@ -67,8 +67,16 @@ interface InitialState {
 
 interface ColumnsParams<T>
 {
-
-  setCurrentRow: React.Dispatch<React.SetStateAction<T>>;
-  setUpdateModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  handleDelete: (record: T) => void;
+  setCurrentRow?: React.Dispatch<React.SetStateAction<T>>;
+  setUpdateModalVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleDelete?: (record: T, actionRef ?: React.Ref<any>) => void;
 }
+
+
+interface OptionProps<T>
+{
+  value: T;
+  label: string;
+}
+
+type OptionArray<T> = OptionProps<T>[];

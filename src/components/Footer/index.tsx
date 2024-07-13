@@ -2,6 +2,7 @@ import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
 import '@umijs/max';
 import React from 'react';
+import defaultSettings from '../../../config/defaultSettings';
 
 const Footer: React.FC = () => {
   const defaultMessage = 'CaixyPromise';
@@ -15,11 +16,10 @@ const Footer: React.FC = () => {
       links={[
         {
           key: 'title',
-          title: 'CaixyPromise',
+          title: defaultSettings.title,
           href: '/',
           blankTarget: true,
         },
-
         {
           key: 'github',
           title: (

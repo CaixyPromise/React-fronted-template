@@ -5,7 +5,7 @@ import type {SelectProps} from "antd";
 export interface SearchInputProps
 {
     mode?: "multiple" | "tags";
-    style?: React.CSSProperties; // Use React.CSSProperties for style objects
+    style?: React.CSSProperties;
     placeholder?: string;
     fetchOptions: (text: string) => Promise<SearchValueResult[]>;
     value: SearchValueResult[];

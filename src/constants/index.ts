@@ -16,3 +16,6 @@ export const baseURL = isDev ? BACKEND_HOST_LOCAL : BACKEND_HOST_PROD
 export const API_URL = baseURL + "/api";
 
 export const STATIC_URL = API_URL + "/static";
+
+
+export const LOGIN_PATH = '/user/login';

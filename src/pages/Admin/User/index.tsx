@@ -95,13 +95,13 @@ const UserAdminPage: React.FC = () =>
                             sortOrder,
                             ...filter,
                         } as API.UserQueryRequest);
-                    }, error => {message.error(error.message)})
+                    }, [], error => {message.error(error.message)})
                     const { data, code } = response;
                     return {
                         success: code === 0,
                         data: data?.records || [],
                         total: Number(data?.total) || 0,
-                    };;
+                    };
                 }}
                 columns={getUserTableColumn({ setCurrentRow , setUpdateModalVisible, handleDelete })}
             />

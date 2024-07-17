@@ -1,21 +1,24 @@
-import React from "react";
+import React, {MutableRefObject} from "react";
 import {ProFormText} from "@ant-design/pro-components";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import {ACCOUNT_REGEX, PASSWORD_REGEX} from "@/constants/regex";
+import CaptchaFormItem from "@/components/CaptchaFormItem/CaptchaFormItem";
 
-interface AuthFormProps {
-
+interface AuthFormProps
+{
+    setCaptchaId: React.Dispatch<React.SetStateAction<string>>
+    captchaRef: any
 }
 
 
-const AuthForm: React.FC<AuthFormProps> = () =>
+const AuthForm:React.FC<AuthFormProps> = ({setCaptchaId, captchaRef}) =>
 {
     return <>
         <ProFormText
             name="userAccount-Login"
             fieldProps={{
                 size: 'large',
-                prefix: <UserOutlined />,
+                prefix: <UserOutlined/>,
             }}
             placeholder={'请输入账号'}
             rules={[
@@ -30,7 +33,7 @@ const AuthForm: React.FC<AuthFormProps> = () =>
             name="userPassword-Login"
             fieldProps={{
                 size: 'large',
-                prefix: <LockOutlined />,
+                prefix: <LockOutlined/>,
             }}
             placeholder={'请输入密码'}
             rules={[
@@ -38,9 +41,10 @@ const AuthForm: React.FC<AuthFormProps> = () =>
                     required: true,
                     message: '密码是必填项！',
                 },
-                // PASSWORD_REGEX
+                PASSWORD_REGEX
             ]}
         />
+        <CaptchaFormItem setCaptchaId={setCaptchaId} ref={captchaRef}/>
     </>
 }
 

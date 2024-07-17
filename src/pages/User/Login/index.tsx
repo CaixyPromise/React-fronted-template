@@ -1,18 +1,17 @@
 import Footer from '@/components/Footer';
-
-import {LockOutlined, MailOutlined, MobileOutlined, PartitionOutlined, SafetyOutlined, UserOutlined} from '@ant-design/icons';
-import {LoginForm, ProFormText} from '@ant-design/pro-components';
+import {LoginForm} from '@ant-design/pro-components';
 import {useEmotionCss} from '@ant-design/use-emotion-css';
 import {Helmet, history, useModel} from '@umijs/max';
-import {Form, message, Tabs} from 'antd';
+import {message, Tabs} from 'antd';
 import React, {useMemo, useRef, useState} from 'react';
 import Settings from '../../../../config/defaultSettings';
 import {userLoginUsingPost1, userRegisterUsingPost1} from "@/services/backend/userController";
 import useAsyncHandler from "@/hooks/useAsyncHandler";
-import {ACCOUNT_REGEX, EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX, PHONE_REGEX} from "@/constants/regex";
 import AuthForm from "@/pages/User/Login/components/AuthForm";
 import RegisterForm from "@/pages/User/Login/components/RegisterForm";
 import {FormInstance} from "antd/lib";
+import {CaptchaFormItemHandle} from "@/components/CaptchaFormItem/CaptchaFormItem";
+import {CaptchaFormTypeProps} from "@/components/CaptchaFormItem/typing";
 
 const Login: React.FC = () =>
 {
@@ -21,12 +20,17 @@ const Login: React.FC = () =>
         AccountLogin = "account",
         Register = "register",
     }
+
     const formRef = useRef<FormInstance>();
     const [ type, setType ] = useState<ActionType>(ActionType.AccountLogin);
     const { initialState, setInitialState } = useModel('@@initialState');
-    const [ loginHandler, isPending,  ] = useAsyncHandler<API.LoginUserVO>()
+    const [ loginHandler, isPending, ] = useAsyncHandler<API.LoginUserVO>()
     const [ registerHandler, isPendingRegister ] = useAsyncHandler<boolean>()
-    const styles = useMemo(() => {
+    const [ captchaId, setCaptchaId ] = useState<string>("");
+    const captchaRef = useRef<CaptchaFormTypeProps.CaptchaFormItemHandle>();
+
+    const styles = useMemo(() =>
+    {
         const baseStyle = {
             transition: 'opacity 0.5s ease, max-height 0.5s ease',
             maxHeight: '0px',
@@ -35,15 +39,16 @@ const Login: React.FC = () =>
         };
 
         const activeStyle = {
-            maxHeight: '400px',
+            maxHeight: '440px',
             opacity: 1
+
         };
 
         return {
             formField: type ? { ...baseStyle } : { ...baseStyle, ...activeStyle },
             formFieldActive: { ...baseStyle, ...activeStyle }
         };
-    }, [type]);
+    }, [ type ]);
     const containerClassName = useEmotionCss(() =>
     {
         return {
@@ -63,6 +68,8 @@ const Login: React.FC = () =>
         {
             const defaultLoginFailureMessage = `登录失败，${error.message}`;
             message.error(defaultLoginFailureMessage);
+            captchaRef.current?.refreshCaptcha();
+            // 重新获取验证码
         };
 
         const res = await loginHandler(async () =>
@@ -70,14 +77,14 @@ const Login: React.FC = () =>
             // 登录
             const response = await userLoginUsingPost1({
                 ...values,
+                captchaId
             });
-            if (!response.data)
+            if (response.code !== 0)
             {
                 return Promise.reject(new Error('登录请求失败'));
             }
-
             return response.data;
-        }, onError);
+        }, [], onError);
 
         if (res)
         {
@@ -96,9 +103,11 @@ const Login: React.FC = () =>
 
     const handleRegister = async (values: API.UserRegisterRequest) =>
     {
-        const onError = (error: Error) => {
+        const onError = (error: Error) =>
+        {
             const defaultLoginFailureMessage = `注册失败，${error.message}`;
             message.error(defaultLoginFailureMessage);
+            captchaRef.current?.refreshCaptcha();
         };
 
         const res = await registerHandler(async () =>
@@ -106,6 +115,7 @@ const Login: React.FC = () =>
             // 注册
             const response = await userRegisterUsingPost1({
                 ...values,
+                captchaId
             });
             if (!response.data)
             {
@@ -113,17 +123,17 @@ const Login: React.FC = () =>
             }
 
             return response.data;
-        }, onError);
+        }, [], onError);
 
         if (res)
         {
             const defaultLoginSuccessMessage = '注册成功！';
             message.success(defaultLoginSuccessMessage);
-            setType(ActionType.AccountLogin);
-            return { success: true, userAccount: values.userAccount}
+            return { success: true, userAccount: values.userAccount }
         }
-        else{
-            return { success: false, userAccount: null}
+        else
+        {
+            return { success: false, userAccount: null }
         }
     }
 
@@ -135,12 +145,12 @@ const Login: React.FC = () =>
         {
             key: ActionType.AccountLogin,
             label: '账户密码登录',
-            dom: <AuthForm />,
+            dom: <AuthForm setCaptchaId={setCaptchaId} captchaRef={captchaRef}/>,
         },
         {
             key: ActionType.Register,
             label: '用户注册',
-            dom: <RegisterForm />
+            dom: <RegisterForm setCaptchaId={setCaptchaId} captchaRef={captchaRef}/>
         },
     ])
 
@@ -150,29 +160,36 @@ const Login: React.FC = () =>
 
         if (type === ActionType.Register)
         {
-            formRef?.current?.validateFields?.(['userAccount', 'userPassword']);
-            const {success, userAccount} = await handleRegister({
-                ...values
-            })
-            if (success)
+            formRef?.current?.validateFields?.([ 'userAccount', 'userPassword', 'captcha' ]).then(async values =>
             {
-                formRef.current?.resetFields();
-                formRef.current?.setFieldsValue({
-                    "userAccount-Login": userAccount,
+                const { success, userAccount } = await handleRegister({
+                    ...values,
+                    captcha: values['captcha']
                 })
-            }
+                if (success)
+                {
+                    formRef.current?.resetFields();
+                    formRef.current?.setFieldsValue({
+                        "userAccount-Login": userAccount,
+                    })
+                    setType(ActionType.AccountLogin);
+                }
+            })
         }
         else
         {
-            formRef.current?.validateFields?.(['userAccount-Login', 'userPassword-Login']).then(async values =>
-            {
-                await handleLogin({
-                    userAccount: values['userAccount-Login'],
-                    userPassword: values['userPassword-Login']
-                }).finally(() => {
-                    formRef.current?.resetFields();
+            formRef.current?.validateFields?.([ 'userAccount-Login', 'userPassword-Login', 'captcha' ]).then(
+                async values =>
+                {
+                    await handleLogin({
+                        userAccount: values['userAccount-Login'],
+                        userPassword: values['userPassword-Login'],
+                        captcha: values['captcha']
+                    }).finally(() =>
+                    {
+                        formRef.current?.resetFields();
+                    });
                 });
-            });
         }
     }
 
@@ -180,7 +197,7 @@ const Login: React.FC = () =>
         <div className={containerClassName}>
             <Helmet>
                 <title>
-                    {'登录'}- {Settings.title}
+                    {'登录'} - {Settings.title}
                 </title>
             </Helmet>
             <div
@@ -201,7 +218,9 @@ const Login: React.FC = () =>
                     initialValues={{
                         autoLogin: true,
                     }}
-
+                    style={{
+                        marginBottom: "-15px"
+                    }}
                     submitter={{
                         searchConfig: {
                             submitText: type === ActionType.Register ? '注册' : '登录'
@@ -213,15 +232,17 @@ const Login: React.FC = () =>
                 >
                     <Tabs
                         activeKey={type}
-                        onChange={(activeKey) => {
-                            console.log('activeKey', activeKey)
+                        onChange={(activeKey) =>
+                        {
                             setType(activeKey as ActionType)
+                            captchaRef.current?.refreshCaptcha();
                         }}
                         centered
                         items={getTabList()}
                     />
                     {
-                        getTabList().map((item, index) => {
+                        getTabList().map((item, index) =>
+                        {
                             return <>
                                 <div key={index}
                                      style={type === item.key ? styles.formFieldActive : styles.formField}>

@@ -45,7 +45,7 @@ interface PageRequest {
  * 删除请求
  */
 interface DeleteRequest {
-  id: number;
+  id: string | number;
 }
 
 /**
@@ -64,6 +64,12 @@ interface InitialState {
   currentUser?: API.LoginUserVO;
 }
 
+interface CryptoConfig
+{
+  base64Key: string; // BASE64编码的密钥
+  base64Iv: string; // BASE64编码的初始化向量
+  mode?: CryptoJS.mode.Mode;
+}
 
 interface ColumnsParams<T>
 {

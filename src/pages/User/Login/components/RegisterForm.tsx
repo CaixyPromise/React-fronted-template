@@ -9,13 +9,15 @@ import {
     UserOutlined
 } from "@ant-design/icons";
 import {ACCOUNT_REGEX, EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX, PHONE_REGEX} from "@/constants/regex";
+import CaptchaFormItem from "@/components/CaptchaFormItem/CaptchaFormItem";
 
 interface RegisterFormProps {
-
+    setCaptchaId: React.Dispatch<React.SetStateAction<string>>
+    captchaRef: any
 }
 
 
-const RegisterForm: React.FC<RegisterFormProps> = () =>
+const RegisterForm: React.FC<RegisterFormProps> = ({setCaptchaId, captchaRef}) =>
 {
     return <>
         <ProFormText
@@ -134,6 +136,7 @@ const RegisterForm: React.FC<RegisterFormProps> = () =>
                 }),
             ]}
         />
+        <CaptchaFormItem setCaptchaId={setCaptchaId} ref={captchaRef} />
     </>
 }
 

@@ -33,6 +33,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseCaptchaVO_ = {
+    code?: number;
+    data?: CaptchaVO;
+    message?: string;
+  };
+
   type BaseResponseInt_ = {
     code?: number;
     data?: number;
@@ -97,6 +103,11 @@ declare namespace API {
     code?: number;
     data?: UserVO;
     message?: string;
+  };
+
+  type CaptchaVO = {
+    codeImage?: string;
+    uuid?: string;
   };
 
   type checkUsingGET1Params = {
@@ -346,6 +357,8 @@ declare namespace API {
   };
 
   type UserRegisterRequest = {
+    captcha?: string;
+    captchaId?: string;
     checkPassword?: string;
     userAccount?: string;
     userEmail?: string;

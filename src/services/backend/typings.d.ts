@@ -147,6 +147,20 @@ declare namespace API {
     id?: number;
   };
 
+  type githubLoginCallbackUsingGET1Params = {
+    /** allParams */
+    allParams: Record<string, any>;
+    /** provider */
+    provider: string;
+  };
+
+  type initiateGithubLoginUsingGET1Params = {
+    redirectUri?: string;
+    sessionId?: string;
+    /** provider */
+    provider: string;
+  };
+
   type LoginUserVO = {
     createTime?: string;
     id?: number;
@@ -302,6 +316,8 @@ declare namespace API {
 
   type User = {
     createTime?: string;
+    githubId?: number;
+    githubUserName?: string;
     id?: number;
     isDelete?: number;
     mpOpenId?: string;

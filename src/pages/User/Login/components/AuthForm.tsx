@@ -44,7 +44,7 @@ const AuthForm:React.FC<AuthFormProps> = ({setCaptchaId, captchaRef}) =>
                 PASSWORD_REGEX
             ]}
         />
-        <CaptchaFormItem setCaptchaId={setCaptchaId} ref={captchaRef}/>
+        <CaptchaFormItem setCaptchaId={setCaptchaId} captchaItemId="login-captcha" ref={captchaRef}/>
     </>
 }
 

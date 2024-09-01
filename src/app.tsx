@@ -17,6 +17,9 @@ export async function getInitialState(): Promise<InitialState> {
   };
   // 如果不是登录页面，执行
   const { location } = history;
+  if (location.pathname === "/user/callback") {
+    return {}
+  }
   if (location.pathname !== LOGIN_PATH) {
     try {
       const res = await getLoginUserUsingGet1();

@@ -10,7 +10,7 @@ import {CaptchaFormTypeProps} from "@/components/CaptchaFormItem/typing";
 const CaptchaFormItem: CaptchaFormTypeProps.ComponentReturnType = forwardRef<
     CaptchaFormTypeProps.CaptchaFormItemHandle,
     CaptchaFormTypeProps.CaptchaFormItemProps
->(({ setCaptchaId }, ref) =>
+>(({ setCaptchaId, captchaItemId }, ref) =>
     {
         const [ captcha, setCaptcha ] = useState<string>('');
         const [ queryCaptchaHandler, loading ] = useAsyncHandler<API.CaptchaVO>();
@@ -50,7 +50,7 @@ const CaptchaFormItem: CaptchaFormTypeProps.ComponentReturnType = forwardRef<
                 justifyContent: 'space-between',
             }}>
                 <ProFormText
-                    name="captcha"
+                    name={captchaItemId}
                     rules={[ {
                         required: true,
 

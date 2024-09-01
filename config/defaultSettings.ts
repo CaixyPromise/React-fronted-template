@@ -8,14 +8,13 @@ const Settings: ProLayoutProps & {
   logo?: string;
 } = {
   navTheme: 'light',
-  // 拂晓蓝
-  colorPrimary: '#1890ff',
+  colorPrimary: '#6a07f3',
   layout: 'mix',
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '前端模板',
+  title: 'React + Ant design Pro前端模板',
   pwa: true,
   iconfontUrl: '',
   token: {

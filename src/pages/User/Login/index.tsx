@@ -12,6 +12,7 @@ import RegisterForm from "@/pages/User/Login/components/RegisterForm";
 import {FormInstance} from "antd/lib";
 import {CaptchaFormItemHandle} from "@/components/CaptchaFormItem/CaptchaFormItem";
 import {CaptchaFormTypeProps} from "@/components/CaptchaFormItem/typing";
+import OAuth2Form from "@/pages/User/Login/components/OAuth2Form";
 
 const Login: React.FC = () =>
 {
@@ -19,6 +20,7 @@ const Login: React.FC = () =>
     {
         AccountLogin = "account",
         Register = "register",
+        OAuth2 = "oauth2"
     }
 
     const formRef = useRef<FormInstance>();
@@ -152,6 +154,11 @@ const Login: React.FC = () =>
             label: '用户注册',
             dom: <RegisterForm setCaptchaId={setCaptchaId} captchaRef={captchaRef}/>
         },
+        {
+            key: ActionType.OAuth2,
+            label: '第三方登录',
+            dom: <OAuth2Form />
+        }
     ])
 
     const onSubmit = async () =>
@@ -160,11 +167,11 @@ const Login: React.FC = () =>
 
         if (type === ActionType.Register)
         {
-            formRef?.current?.validateFields?.([ 'userAccount', 'userPassword', 'captcha' ]).then(async values =>
+            formRef?.current?.validateFields?.([ 'userAccount', 'userPassword', 'login-captcha' ]).then(async values =>
             {
                 const { success, userAccount } = await handleRegister({
                     ...values,
-                    captcha: values['captcha']
+                    captcha: values['login-captcha']
                 })
                 if (success)
                 {
@@ -178,13 +185,13 @@ const Login: React.FC = () =>
         }
         else
         {
-            formRef.current?.validateFields?.([ 'userAccount-Login', 'userPassword-Login', 'captcha' ]).then(
+            formRef.current?.validateFields?.([ 'userAccount-Login', 'userPassword-Login', 'register-captcha' ]).then(
                 async values =>
                 {
                     await handleLogin({
                         userAccount: values['userAccount-Login'],
                         userPassword: values['userPassword-Login'],
-                        captcha: values['captcha']
+                        captcha: values['register-captcha']
                     }).finally(() =>
                     {
                         formRef.current?.resetFields();

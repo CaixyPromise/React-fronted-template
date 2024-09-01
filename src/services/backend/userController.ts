@@ -161,6 +161,40 @@ export async function modifyPasswordUsingPost1(
   });
 }
 
+/** githubLoginCallback GET /api/user/oauth2/${param0}/callback */
+export async function githubLoginCallbackUsingGet1(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.githubLoginCallbackUsingGET1Params,
+  options?: { [key: string]: any },
+) {
+  const { provider: param0, ...queryParams } = params;
+  return request<any>(`/api/user/oauth2/${param0}/callback`, {
+    method: 'GET',
+    params: {
+      ...queryParams,
+      allParams: undefined,
+      ...queryParams['allParams'],
+    },
+    ...(options || {}),
+  });
+}
+
+/** initiateGithubLogin GET /api/user/oauth2/${param0}/login */
+export async function initiateGithubLoginUsingGet1(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.initiateGithubLoginUsingGET1Params,
+  options?: { [key: string]: any },
+) {
+  const { provider: param0, ...queryParams } = params;
+  return request<API.BaseResponseString_>(`/api/user/oauth2/${param0}/login`, {
+    method: 'GET',
+    params: {
+      ...queryParams,
+    },
+    ...(options || {}),
+  });
+}
+
 /** userRegister POST /api/user/register */
 export async function userRegisterUsingPost1(
   body: API.UserRegisterRequest,

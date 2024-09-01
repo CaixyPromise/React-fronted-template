@@ -45,10 +45,13 @@ type useAsyncHandlerCallbackProps<T> = (
  * 注意 (Note): 确保传递给 run 函数的 action、onError 和 onCleanup 函数参数均为函数类型，否则会抛出错误。
  * Ensure that the action, onError, and onCleanup function parameters passed to the run function are all of function type, otherwise an error will be thrown.
  */
-const useAsyncHandler = <T extends any>(): [ <T>(action: AsyncHandlerFunc<T>, actionParams: any[], onError?: AsyncHandlerErrorFunc, onCleanup?: AsyncHandlerVoidFunc) => Promise<T>, boolean, T ] =>
-{
+const useAsyncHandler = <T extends any>(): [
+    (action: AsyncHandlerFunc<T>, actionParams: any[], onError?: AsyncHandlerErrorFunc, onCleanup?: AsyncHandlerVoidFunc) => Promise<T | null>,
+    boolean,
+        T | null,
+] => {
     const [isPending, setIsPending] = useState<boolean>(false);
-    const [data, setData] = useState<T>();
+    const [data, setData] = useState<T | null>(null);
     const cleanupRef = useRef<(() => void) | null>(null);
 
     const run: useAsyncHandlerCallbackProps<T> = useCallback(async (

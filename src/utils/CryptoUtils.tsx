@@ -1,6 +1,13 @@
 import crypto from "crypto-js";
 import {CryptoConfig} from "@/typings";
 
+/**
+ * 计算文件sha256
+ *
+ * @author CAIXYPROMISE
+ * @version 1.0
+ * @since 2024/9/1 下午6:47
+ */
 const calculateSHA256 = (file: File): Promise<string> =>
 {
     return new Promise((resolve, reject) =>

@@ -136,7 +136,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({setCaptchaId, captchaRef}) =
                 }),
             ]}
         />
-        <CaptchaFormItem setCaptchaId={setCaptchaId} ref={captchaRef} />
+        <CaptchaFormItem setCaptchaId={setCaptchaId} captchaItemId="register-captcha" ref={captchaRef} />
     </>
 }
 

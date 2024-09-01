@@ -9,8 +9,10 @@ import {useUserData} from "@/pages/User/Settings/context";
 import {RcFile} from "antd/lib/upload";
 import useAsyncHandler from "@/hooks/useAsyncHandler";
 import {uploadFileUsingPost1} from "@/services/backend/fileController";
-import {UploadType} from "@/constants/uploadType";
+import {UploadType} from "@/enums/uploadType";
 import {STATIC_URL} from "@/constants";
+import {isFullUrl} from "@/constants/regex";
+import user from "@/pages/Admin/User";
 
 const BaseView: React.FC = () =>
 {
@@ -20,8 +22,12 @@ const BaseView: React.FC = () =>
     const [ form ] = ProForm.useForm();
     const [ uploadFileHandler, uploading ] = useAsyncHandler<string>()
     const userAvatar = useMemo(() => {
-        console.log("userData: ", userData)
-        return userData.userAvatar ? `${STATIC_URL}${userData.userAvatar}` : null
+        if (userData.userAvatar === null)
+        {
+            return null
+        }
+        return isFullUrl(userData.userAvatar as string) ? userData.userAvatar : `${STATIC_URL}${userData.userAvatar}`
+        // return userData.userAvatar ? `${STATIC_URL}${userData.userAvatar}` : null
     }, [userData])
 
     const uploadFile = async (file: RcFile): Promise<string> =>
@@ -51,7 +57,7 @@ const BaseView: React.FC = () =>
         <>
             <div className={styles.avatar_title}>头像</div>
             <div className={styles.avatar}>
-                {userAvatar ? <Image src={userAvatar} alt="avatar" /> : <UserOutlined />}
+                {userAvatar ? <Image src={userAvatar} alt="avatar" /> : <UserOutlined size={30}/>}
             </div>
             <Upload showUploadList={false} accept={'.png,.jpg,.jpeg'}
                     action={uploadFile}

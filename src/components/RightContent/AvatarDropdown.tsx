@@ -9,6 +9,7 @@ import { Link } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import {userLogoutUsingPost1} from "@/services/backend/userController";
 import {LOGIN_PATH, STATIC_URL} from "@/constants";
+import UserAvatar from "@/components/UserAvatar";
 
 export type GlobalHeaderRightProps = {
     menu?: boolean;
@@ -102,9 +103,9 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         >
             <Space>
                 {currentUser?.userAvatar ? (
-                    <Avatar size="default" src={`${STATIC_URL}${currentUser?.userAvatar}`} />
+                    <UserAvatar size="default" src={currentUser.userAvatar} />
                 ) : (
-                    <Avatar size="small" icon={<UserOutlined />} />
+                    <UserAvatar size="small" />
                 )}
                 <span className="anticon">{currentUser?.userName ?? '用户'}</span>
             </Space>

@@ -41,3 +41,6 @@ export const PHONE_REGEX: BaseRule = {
     pattern: /^1[3-9]\d{9}$/,
     message: "请输入有效的手机号",
 }
+
+
+export const isFullUrl = (url: string): boolean => /^(http:\/\/|https:\/\/)/i.test(url);

@@ -19,3 +19,5 @@ export const STATIC_URL = API_URL + "/static";
 
 
 export const LOGIN_PATH = '/user/login';
+
+export const HOME_HOST_DEV = 'http://localhost:8000';

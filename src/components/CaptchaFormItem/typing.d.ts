@@ -5,6 +5,7 @@ declare namespace CaptchaFormTypeProps
     interface CaptchaFormItemProps
     {
         setCaptchaId: React.Dispatch<React.SetStateAction<string>>
+        captchaItemId: string
     }
 
 // 定义暴露给父组件的方法

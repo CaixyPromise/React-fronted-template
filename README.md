@@ -1,9 +1,5 @@
 # 前端模板-React + Ant design Pro
 
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
-
 
 
 基于 React + Ant Design 的项目初始模板，整合了常用框架和主流业务的示例代码。只需 1 分钟 即可完成网站的基础前端！！！欢迎加:star:或pull request.
@@ -41,13 +37,13 @@
 
 官网地址：https://ant-design.antgroup.com/index-cn
 
-![ant design](.\docs\ant design.png)
+![ant design](/docs/ant design.png)
 
 #### Ant Design Chart 简单好用的React 图表库
 
 官网地址：https://ant-design-charts.antgroup.com/
 
-![ant design chart](.\docs\ant design chart.png)
+![ant design chart](/docs/ant design chart.png)
 
 #### ProComponents 模板组件
 
@@ -120,14 +116,14 @@ https://github.com/CaixyPromise/Springboot-inital-template
    1. 启动后端的万用模板或带有接口文档的后端项目
    2. 在前端项目的config/config.ts大约129行处，设置`schemaPath`为你的后端接口路径
 
-   ![setting_openapi](.\docs\setting_openapi.png)
+   ![setting_openapi](/docs/setting_openapi.png)
 
    3. 在package.json找到open api的启动方式，快速请求生成后端地址。
-      ![query_openapi](.\docs\query_openapi.png)
+      ![query_openapi](/docs/query_openapi.png)
 
 3. 将标题和 logo 等切换为个人所需配置：config/defaultSettings.ts
 
-![modify_title_logo](.\docs\modify_title_logo.png)
+![modify_title_logo](/docs/modify_title_logo.png)
 
 4）测试业务功能
 

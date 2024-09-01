@@ -37,13 +37,13 @@
 
 官网地址：https://ant-design.antgroup.com/index-cn
 
-![ant design](/docs/ant design.png)
+![ant design](/docs/ant_design.png)
 
 #### Ant Design Chart 简单好用的React 图表库
 
 官网地址：https://ant-design-charts.antgroup.com/
 
-![ant design chart](/docs/ant design chart.png)
+![ant design chart](/docs/ant_design_chart.png)
 
 #### ProComponents 模板组件
 

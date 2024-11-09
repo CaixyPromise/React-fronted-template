@@ -7,9 +7,9 @@ import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import { Link } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
-import {userLogoutUsingPost1} from "@/services/backend/userController";
-import {LOGIN_PATH, STATIC_URL} from "@/constants";
+import {LOGIN_PATH} from "@/constants";
 import UserAvatar from "@/components/UserAvatar";
+import {userLogoutUsingPost1} from "@/services/backend/authController";
 
 export type GlobalHeaderRightProps = {
     menu?: boolean;

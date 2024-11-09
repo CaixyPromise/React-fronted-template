@@ -4,6 +4,7 @@ import React from "react";
 import {ColumnsParams} from "@/typings";
 import {STATIC_URL} from "@/constants";
 import UserSexLined from "@/components/UserSexLined";
+import {isFullUrl, RegexUtil} from "@/constants/regex";
 
 export const getUserTableColumn = ({
     setCurrentRow, setUpdateModalVisible, handleDelete
@@ -63,13 +64,17 @@ export const getUserTableColumn = ({
         },
         hideInSearch: true,
         render: (_, record) => {
+
+            if (!record.userAvatar) {
+                return null;
+            }
             return <Image
                 style={{
                     width: '121px',
                     height: '121px',
                     borderRadius: "8px"
                 }}
-                src={`${STATIC_URL}${record.userAvatar}`}
+                src={isFullUrl(record.userAvatar) ? record.userAvatar : `${STATIC_URL}${record.userAvatar}`}
                 alt={"avatar"} key={record.id}/>
         }
     },

@@ -5,14 +5,15 @@ import {Helmet, history, useModel} from '@umijs/max';
 import {message, Tabs} from 'antd';
 import React, {useMemo, useRef, useState} from 'react';
 import Settings from '../../../../config/defaultSettings';
-import {userLoginUsingPost1, userRegisterUsingPost1} from "@/services/backend/userController";
+import {userRegisterUsingPost1} from "@/services/backend/userController";
 import useAsyncHandler from "@/hooks/useAsyncHandler";
 import AuthForm from "@/pages/User/Login/components/AuthForm";
 import RegisterForm from "@/pages/User/Login/components/RegisterForm";
 import {FormInstance} from "antd/lib";
-import {CaptchaFormItemHandle} from "@/components/CaptchaFormItem/CaptchaFormItem";
 import {CaptchaFormTypeProps} from "@/components/CaptchaFormItem/typing";
 import OAuth2Form from "@/pages/User/Login/components/OAuth2Form";
+import {userLoginUsingPost1} from "@/services/backend/authController";
+import {TokenUtil} from "@/utils/TokenUtil";
 
 const Login: React.FC = () =>
 {
@@ -66,23 +67,40 @@ const Login: React.FC = () =>
 
     const handleLogin = async (values: API.UserLoginRequest) =>
     {
+        const onSuccess = (res: API.LoginUserVO) => {
+          if (TokenUtil.isTokenLoggedIn()) {
+            const {token} = res;
+            if (token === undefined) {
+              message.error('登录失败，token为空');
+              return -1;
+            }
+            TokenUtil.setToken(token);
+          }
+          // 保存已登录用户信息
+          setInitialState((prevState: any) => ({
+            ...prevState,
+            ...res,
+            currentUser: res,
+          }));
+          return 0;
+        }
         const onError = (error: Error) =>
         {
             const defaultLoginFailureMessage = `登录失败，${error.message}`;
             message.error(defaultLoginFailureMessage);
-            captchaRef.current?.refreshCaptcha();
             // 重新获取验证码
+            captchaRef.current?.refreshCaptcha();
         };
 
         const res = await loginHandler(async () =>
         {
+            console.log("values: ", values)
             // 登录
             const response = await userLoginUsingPost1({
                 ...values,
                 captchaId
             });
-            if (response.code !== 0)
-            {
+            if (response.code !== 0) {
                 return Promise.reject(new Error('登录请求失败'));
             }
             return response.data;
@@ -92,14 +110,11 @@ const Login: React.FC = () =>
         {
             const defaultLoginSuccessMessage = '登录成功！';
             message.success(defaultLoginSuccessMessage);
-            // 保存已登录用户信息
-            setInitialState((prevState: any) => ({
-                ...prevState,
-                currentUser: res,
-            }));
-            const urlParams = new URL(window.location.href).searchParams;
-            const redirectUrl = urlParams.get('redirect') || '/';
-            history.push(redirectUrl);
+            if (!onSuccess(res)) {
+              const urlParams = new URL(window.location.href).searchParams;
+              const redirectUrl = urlParams.get('redirect') || '/';
+              history.push(redirectUrl);
+            }
         }
     };
 
@@ -121,9 +136,9 @@ const Login: React.FC = () =>
             });
             if (!response.data)
             {
+                message.error(`注册失败：${response.message}`)
                 return Promise.reject(new Error('注册请求失败'));
             }
-
             return response.data;
         }, [], onError);
 
@@ -165,38 +180,39 @@ const Login: React.FC = () =>
     {
         const values = formRef.current?.getFieldsValue();
 
-        if (type === ActionType.Register)
+        if (type === ActionType.AccountLogin)
         {
-            formRef?.current?.validateFields?.([ 'userAccount', 'userPassword', 'login-captcha' ]).then(async values =>
-            {
-                const { success, userAccount } = await handleRegister({
-                    ...values,
-                    captcha: values['login-captcha']
-                })
-                if (success)
-                {
-                    formRef.current?.resetFields();
-                    formRef.current?.setFieldsValue({
-                        "userAccount-Login": userAccount,
-                    })
-                    setType(ActionType.AccountLogin);
-                }
-            })
-        }
-        else
-        {
-            formRef.current?.validateFields?.([ 'userAccount-Login', 'userPassword-Login', 'register-captcha' ]).then(
-                async values =>
-                {
+            formRef?.current
+                ?.validateFields?.([ 'userAccount-Login', 'userPassword-Login', 'login-captcha' ])
+                .then(async values => {
                     await handleLogin({
                         userAccount: values['userAccount-Login'],
                         userPassword: values['userPassword-Login'],
-                        captcha: values['register-captcha']
-                    }).finally(() =>
-                    {
+                        captcha: values['login-captcha']
+                    }).finally(() => {
                         formRef.current?.resetFields();
                     });
                 });
+        }
+        else
+        {
+            formRef?.current
+                ?.validateFields
+                ?.([ 'userAccount', 'userPassword', 'register-captcha' ])
+                .then(async values => {
+                    const { success, userAccount } = await handleRegister({
+                        ...values,
+                        captcha: values['register-captcha']
+                    })
+                    if (success)
+                    {
+                        formRef.current?.resetFields();
+                        formRef.current?.setFieldsValue({
+                            "userAccount-Login": userAccount,
+                        })
+                        setType(ActionType.AccountLogin);
+                    }
+            })
         }
     }
 

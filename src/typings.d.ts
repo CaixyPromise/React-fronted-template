@@ -62,6 +62,7 @@ interface BaseResponse<T> {
  */
 interface InitialState {
   currentUser?: API.LoginUserVO;
+  token?: string;
 }
 
 interface CryptoConfig

@@ -47,7 +47,7 @@ export async function uploadFileUsingPost1(
     }
   });
 
-  return request<API.BaseResponseString_>('/api/file/upload', {
+  return request<API.ResultString_>('/api/file/upload', {
     method: 'POST',
     params: {
       ...params,

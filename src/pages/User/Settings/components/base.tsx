@@ -2,7 +2,6 @@ import {ProForm, ProFormText,} from '@ant-design/pro-components';
 import {Button, Image, message, Spin, Upload} from 'antd';
 import React, {useEffect, useMemo} from 'react';
 import useStyles from './index.style';
-import {updateMyUserUsingPost1} from "@/services/backend/userController";
 import {ProFormSelect} from "@ant-design/pro-form/lib";
 import {UploadOutlined, UserOutlined} from "@ant-design/icons";
 import {useUserData} from "@/pages/User/Settings/context";
@@ -12,7 +11,7 @@ import {uploadFileUsingPost1} from "@/services/backend/fileController";
 import {UploadType} from "@/enums/uploadType";
 import {STATIC_URL} from "@/constants";
 import {isFullUrl} from "@/constants/regex";
-import user from "@/pages/Admin/User";
+import {updateMeProfileUsingPost1} from "@/services/backend/userController";
 
 const BaseView: React.FC = () =>
 {
@@ -81,7 +80,7 @@ const BaseView: React.FC = () =>
     {
         try
         {
-            const { data, code } = await updateMyUserUsingPost1(values as API.AboutMeVO)
+            const { data, code } = await updateMeProfileUsingPost1(values as API.AboutMeVO)
             if (code === 0)
             {
                 // setUserData(values)

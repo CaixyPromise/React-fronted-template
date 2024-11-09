@@ -21,3 +21,12 @@ export const STATIC_URL = API_URL + "/static";
 export const LOGIN_PATH = '/user/login';
 
 export const HOME_HOST_DEV = 'http://localhost:8000';
+
+export enum LOGIN_TYPE {
+  TOKEN = "TOKEN",
+  SESSION = "SESSION"
+}
+
+export const CURRENT_LOGIN_TYPE = LOGIN_TYPE.TOKEN;
+
+export const LOGIN_TOKEN_KEY = "TOKEN";

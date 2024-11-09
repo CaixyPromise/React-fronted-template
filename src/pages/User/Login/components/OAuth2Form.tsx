@@ -1,10 +1,10 @@
 import {FacebookOutlined, GithubOutlined, GoogleOutlined, XOutlined} from "@ant-design/icons";
-import {List} from "antd";
+import {List, message} from "antd";
 import React from "react";
-import {initiateGithubLoginUsingGet1} from "@/services/backend/userController";
 import {HOME_HOST_DEV} from "@/constants";
 import {OAuthTypeEnum} from "@/enums/OAuthTypeEnum";
 import {UNIMPLEMENTED} from "@/utils/unImplemented";
+import {initOAuthLoginUsingGet1} from "@/services/backend/authController";
 
 
 
@@ -14,9 +14,10 @@ interface OAuth2FormProps {
 
 const OAuth2Form:React.FC<OAuth2FormProps> = () =>
 {
-    const doAuthLogin = async (provider: OAuthTypeEnum) => {
+    const doAuthLogin = async (provider: OAuthTypeEnum) =>
+    {
         try {
-            const response = await initiateGithubLoginUsingGet1({
+            const response = await initOAuthLoginUsingGet1({
                 redirectUri: HOME_HOST_DEV,
                 provider: provider
             })
@@ -25,12 +26,10 @@ const OAuth2Form:React.FC<OAuth2FormProps> = () =>
                 window.location.href = response.data
             }
         }
-        catch (e : any)
-        {
-
+        catch (e : any) {
+          message.error(e.message)
         }
     }
-
 
     const oauth2List: {
         icon: React.ReactNode,

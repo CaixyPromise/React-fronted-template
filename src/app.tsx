@@ -4,9 +4,10 @@ import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown } from './components/RightContent/AvatarDropdown';
 import { requestConfig } from './requestConfig';
-import {getLoginUserUsingGet1} from "@/services/backend/userController";
 import {InitialState} from "@/typings";
 import {LOGIN_PATH} from "@/constants";
+import {TokenUtil} from "@/utils/TokenUtil";
+import {getLoginUserUsingGet1} from "@/services/backend/authController";
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -24,6 +25,14 @@ export async function getInitialState(): Promise<InitialState> {
     try {
       const res = await getLoginUserUsingGet1();
       initialState.currentUser = res.data;
+      // 如果是session登录
+      if (TokenUtil.isTokenLoggedIn()) {
+        const {token} = res.data;
+        // 如果token不一致，则换新token
+        if (token !== undefined && token !== TokenUtil.getToken()) {
+          TokenUtil.setToken(token);
+        }
+      }
     } catch (error: any) {
       // 如果未登录
       window.location.href = LOGIN_PATH;

@@ -1,6 +1,8 @@
-﻿import {baseURL} from '@/constants';
+﻿import {baseURL,LOGIN_TOKEN_KEY} from '@/constants';
 import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
+import {LocalStorageUtil} from "@/utils/LocalStorageUtil";
+import {TokenUtil} from "@/utils/TokenUtil";
 
 // 与后端约定的响应数据格式
 interface ResponseStructure {
@@ -24,6 +26,11 @@ export const requestConfig: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
+      if (TokenUtil.isTokenLoggedIn()) {
+        config.headers = {
+          Authorization: `Bearer ${LocalStorageUtil.getItem(LOGIN_TOKEN_KEY)}`,
+        }
+      }
       // 拦截请求配置，进行个性化处理。
       return config;
     },
@@ -53,7 +60,6 @@ export const requestConfig: RequestConfig = {
         window.location.href = `/user/login?redirect=${window.location.href}`;
         throw new Error('请先登录');
       }
-
       if (code !== 0) {
         throw new Error(data.message ?? '服务器错误');
       }
